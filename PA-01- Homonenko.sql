@@ -107,75 +107,37 @@ INSERT INTO Class_Attendances (visitID, classID) VALUES
 (5, 4),  
 (6, 2);  
 
-SELECT 
+select 
     m.first_name, 
     m.last_name, 
-    c.class_name, 
-    co.coach_name, 
-    COUNT(gv.visitID) AS total_visits,  
-    AVG(gv.duration) AS avg_duration,   
-    SUM(gv.duration) AS total_hours,    
-    mem.price AS membership_fee         
-FROM 
+    COUNT(gv.visitID) AS total_visits, 
+    SUM(gv.duration) AS total_hours     
+from 
     Members m
-JOIN 
+join 
     Gym_Visits gv ON m.MemberID = gv.memberID
-JOIN 
-    Class_Attendances ca ON gv.visitID = ca.visitID 
-JOIN 
-    Classes c ON ca.classID = c.classID  
-JOIN 
-    Coaches co ON co.coachID = c.coachID
-JOIN 
-    Memberships mem ON mem.memberID = m.memberID
-    AND gv.visit_date BETWEEN mem.start_date AND mem.end_date  
-WHERE 
-    gv.visit_date BETWEEN '2024-01-01' AND '2024-12-31'  
-GROUP BY 
-    m.first_name,
-    m.last_name, 
-    c.class_name, 
-    co.coach_name, 
-    mem.price
-ORDER BY 
-    total_visits DESC,  
-    total_hours DESC;
+where 
+    gv.visit_date between '2024-01-01' and '2024-12-31'
+group by 
+    m.first_name, 
+    m.last_name   
+order by
+    total_hours desc,
+    total_visits desc;
    
-
-WITH MostActiveMembers AS (
-    SELECT 
-        m.memberID, 
-        m.first_name, 
-        m.last_name, 
-        SUM(gv.duration) AS total_hours,  
-        COUNT(gv.visitID) AS total_visits 
-    FROM 
-        Members m
-    JOIN 
-        Gym_Visits gv ON m.memberID = gv.memberID
-    GROUP BY 
-        m.memberID, m.first_name, m.last_name
+ with Maxduration as (
+    select 
+        memberID, 
+        MAX(duration) AS max_duration
+    from 
+        Gym_Visits
+    group by
+        memberID
 )
-
-
-SELECT 
-    mam.first_name, 
-    mam.last_name, 
-    mam.total_visits, 
-    mam.total_hours, 
-    mem.price AS membership_fee,
-    CASE 
-        WHEN mam.total_hours > 3 THEN 'Gold Member' 
-        WHEN mam.total_hours >= 2 THEN 'Silver Member'
-        ELSE 'Bronze Member'
-    END AS membership_level
-FROM 
-    MostActiveMembers mam
-JOIN 
-    Memberships mem ON mam.memberID = mem.memberID
-ORDER BY 
-    mam.total_visits DESC,  
-    mam.total_hours DESC 
+select 
+    avg(max_duration) as averageMaxDuration
+from 
+    Maxduration;
 
 
 
