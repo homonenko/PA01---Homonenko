@@ -1,19 +1,17 @@
 
-CREATE DATABASE Gym_hw1;
-
-USE Gym_hw1;
+create database Gym_hw1;
 
 
-CREATE TABLE Members (
-    MemberID INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(100),
-    last_name VARCHAR(100),
-    email VARCHAR(100),
-    phone VARCHAR(20)
+create table Members (
+ memberID INT AUTO_INCREMENT PRIMARY KEY,
+ first_name VARCHAR(100),
+ last_name VARCHAR(100),
+  email VARCHAR(100),
+  phone VARCHAR(20)
 );
 
 
-CREATE TABLE Coaches (
+create table Coaches (
     coachID INT AUTO_INCREMENT PRIMARY KEY,
     coach_name VARCHAR(100),
     class_type VARCHAR(100)
@@ -21,10 +19,10 @@ CREATE TABLE Coaches (
 
 
 CREATE TABLE Classes (
-    classID INT AUTO_INCREMENT PRIMARY KEY,
-    class_name VARCHAR(100),
-    class_time TIME,
-    coachID INT,
+ classID INT AUTO_INCREMENT PRIMARY KEY,
+  class_name VARCHAR(100),
+ class_time TIME,
+  coachID INT,
     FOREIGN KEY (coachID) REFERENCES Coaches(coachID)
 );
 
@@ -39,8 +37,8 @@ CREATE TABLE Memberships (
 );
 
 
-CREATE TABLE Gym_Visits (
-    visitID INT AUTO_INCREMENT PRIMARY KEY,
+create table Gym_Visits (
+  visitID INT AUTO_INCREMENT PRIMARY KEY,
     memberID INT,
     visit_date DATE,
     duration DECIMAL(4, 2), 
@@ -48,11 +46,11 @@ CREATE TABLE Gym_Visits (
 );
 
 
-CREATE TABLE Class_Attendances (
-    attendanceID INT AUTO_INCREMENT PRIMARY KEY,
-    visitID INT,
+create table Class_Attendances (
+  attendanceID INT AUTO_INCREMENT PRIMARY KEY,
+  visitID INT,
     classID INT,
-    FOREIGN KEY (visitID) REFERENCES Gym_Visits(visitID),
+  FOREIGN KEY (visitID) REFERENCES Gym_Visits(visitID),
     FOREIGN KEY (classID) REFERENCES Classes(classID)
 );
 
@@ -107,6 +105,7 @@ INSERT INTO Class_Attendances (visitID, classID) VALUES
 (5, 4),  
 (6, 2);  
 
+
 select 
     m.first_name, 
     m.last_name, 
@@ -120,7 +119,8 @@ where
     gv.visit_date between '2024-01-01' and '2024-12-31'
 group by 
     m.first_name, 
-    m.last_name   
+    m.last_name
+   
 order by
     total_hours desc,
     total_visits desc;
@@ -137,11 +137,4 @@ order by
 select 
     avg(max_duration) as averageMaxDuration
 from 
-    Maxduration;
-
-
-
-  
-   
-
-    
+ Maxduration;
