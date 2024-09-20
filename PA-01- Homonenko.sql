@@ -138,3 +138,6 @@ select
     avg(max_duration) as averageMaxDuration
 from 
  Maxduration;
+  select first_name, last_name from members
+union
+select coach_name, 'no last name' from coaches;
